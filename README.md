@@ -35,9 +35,6 @@ Many Windows users see sudden microphone boosts or drops mid-call. This app cont
 ## Download
 
 <p>
-	<a href="https://github.com/rajanjha13/windows-mic-auto-gain-fix/raw/main/MicVolumeGuard-Setup-win-x64.exe">
-		<img src="https://img.shields.io/badge/Download-Installer_(Recommended)-ff7b00?style=for-the-badge&logo=windows" alt="Download Mic Volume Guard Installer for Windows" />
-	</a>
 	<a href="https://github.com/rajanjha13/windows-mic-auto-gain-fix/raw/main/MicVolumeGuard-Windows-lite-win-x64.zip">
 		<img src="https://img.shields.io/badge/Download-Lite_ZIP_(Small)-2ea44f?style=for-the-badge&logo=windows" alt="Download Mic Volume Guard Lite for Windows" />
 	</a>
@@ -47,14 +44,12 @@ Many Windows users see sudden microphone boosts or drops mid-call. This app cont
 </p>
 
 1. Click the download button above.
-2. Installer (recommended): `MicVolumeGuard-Setup-win-x64.exe` for Start Menu entry and uninstall support in Windows Settings.
-3. Lite package: `MicVolumeGuard-Windows-lite-win-x64.zip` (very small, requires .NET Desktop Runtime on the PC).
-4. Full package: `MicVolumeGuard-Windows-win-x64.zip` (larger, runs without installing .NET runtime).
-5. For ZIP packages: extract and run `MicVolumeGuard.App.exe`.
+2. Lite package: `MicVolumeGuard-Windows-lite-win-x64.zip` (very small, requires .NET Desktop Runtime on the PC).
+3. Full package: `MicVolumeGuard-Windows-win-x64.zip` (larger, runs without installing .NET runtime).
+4. Extract and run `MicVolumeGuard.App.exe`.
 
 ## Uninstall
 
-- If installed via setup: remove from Windows `Settings > Apps > Installed apps`.
 - If using ZIP package: exit app from tray, disable startup in app settings, then delete the extracted folder.
 
 ## Usage Terms
