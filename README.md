@@ -35,15 +35,19 @@ Many Windows users see sudden microphone boosts or drops mid-call. This app cont
 ## Download
 
 <p>
+	<a href="https://github.com/rajanjha13/windows-mic-auto-gain-fix/raw/main/MicVolumeGuard-Windows-lite-win-x64.zip">
+		<img src="https://img.shields.io/badge/Download-Lite_ZIP_(Small)-2ea44f?style=for-the-badge&logo=windows" alt="Download Mic Volume Guard Lite for Windows" />
+	</a>
 	<a href="https://github.com/rajanjha13/windows-mic-auto-gain-fix/raw/main/MicVolumeGuard-Windows-win-x64.zip">
-		<img src="https://img.shields.io/badge/Download-Windows_ZIP-2ea44f?style=for-the-badge&logo=windows" alt="Download Mic Volume Guard for Windows" />
+		<img src="https://img.shields.io/badge/Download-Full_ZIP_(No_Runtime_Required)-1f6feb?style=for-the-badge&logo=windows" alt="Download Mic Volume Guard Full for Windows" />
 	</a>
 </p>
 
 1. Click the download button above.
-2. If needed, use direct link: `https://github.com/rajanjha13/windows-mic-auto-gain-fix/raw/main/MicVolumeGuard-Windows-win-x64.zip`
-3. Extract the zip.
-4. Run `MicVolumeGuard.App.exe`.
+2. Lite package: `MicVolumeGuard-Windows-lite-win-x64.zip` (very small, requires .NET Desktop Runtime on the PC).
+3. Full package: `MicVolumeGuard-Windows-win-x64.zip` (larger, runs without installing .NET runtime).
+4. Extract the zip.
+5. Run `MicVolumeGuard.App.exe`.
 
 ## Usage Terms
 
