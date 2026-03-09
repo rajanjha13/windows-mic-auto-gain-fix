@@ -6,8 +6,8 @@ dotnet publish .\MicVolumeGuard.App\MicVolumeGuard.App.csproj -c Release -r win-
 Write-Host "Publishing single-file full ZIP build..."
 dotnet publish .\MicVolumeGuard.App\MicVolumeGuard.App.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:EnableCompressionInSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=false /p:DebugType=None /p:DebugSymbols=false /p:PublishTrimmed=false -o .\publish\zip-full
 
-$liteExe = ".\publish\zip-lite\MicVolumeGuard.App.exe"
-$fullExe = ".\publish\zip-full\MicVolumeGuard.App.exe"
+$liteExe = ".\publish\zip-lite\MicVolumeGuard.exe"
+$fullExe = ".\publish\zip-full\MicVolumeGuard.exe"
 
 if (-not (Test-Path $liteExe)) {
     throw "Lite EXE not found at $liteExe"
@@ -30,8 +30,8 @@ if (Test-Path $fullStaging) {
 New-Item -ItemType Directory -Path $liteStaging | Out-Null
 New-Item -ItemType Directory -Path $fullStaging | Out-Null
 
-Copy-Item $liteExe -Destination (Join-Path $liteStaging "MicVolumeGuard.App.exe") -Force
-Copy-Item $fullExe -Destination (Join-Path $fullStaging "MicVolumeGuard.App.exe") -Force
+Copy-Item $liteExe -Destination (Join-Path $liteStaging "MicVolumeGuard.exe") -Force
+Copy-Item $fullExe -Destination (Join-Path $fullStaging "MicVolumeGuard.exe") -Force
 
 $liteZip = ".\MicVolumeGuard-Windows-lite-win-x64.zip"
 $fullZip = ".\MicVolumeGuard-Windows-win-x64.zip"

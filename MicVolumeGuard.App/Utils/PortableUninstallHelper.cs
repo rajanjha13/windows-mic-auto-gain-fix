@@ -63,7 +63,7 @@ Write-Host """"
 
 # Stop any running instances
 Write-Host ""Stopping MicVolumeGuard..."" -ForegroundColor Yellow
-Get-Process -Name ""MicVolumeGuard.App"" -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process -Name ""MicVolumeGuard"" -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep -Seconds 2
 
 # Remove startup registry entry

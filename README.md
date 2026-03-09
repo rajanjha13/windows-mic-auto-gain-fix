@@ -45,7 +45,7 @@ Many Windows users see sudden microphone boosts or drops mid-call. This app cont
 1. Click the download button above.
 2. Lite package: `MicVolumeGuard-Windows-lite-win-x64.zip` (very small, requires .NET Desktop Runtime on the PC).
 3. Full package: `MicVolumeGuard-Windows-win-x64.zip` (larger, runs without installing .NET runtime).
-4. Extract ZIP and run `MicVolumeGuard.App.exe`.
+4. Extract ZIP and run `MicVolumeGuard.exe`.
 5. ZIP packages now extract with a single visible app file so you do not need to search through many files.
 
 ## Uninstall

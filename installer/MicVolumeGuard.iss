@@ -2,7 +2,7 @@
 #define MyAppVersion "1.0.1"
 #define MyAppPublisher "Rajan Jha"
 #define MyAppURL "https://github.com/rajanjha13/windows-mic-auto-gain-fix"
-#define MyAppExeName "MicVolumeGuard.App.exe"
+#define MyAppExeName "MicVolumeGuard.exe"
 #define BuildOutputDir "..\publish\selfcontained-optimized"
 
 [Setup]
