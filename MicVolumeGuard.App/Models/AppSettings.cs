@@ -8,7 +8,7 @@ namespace MicVolumeGuard.App.Models
 
         public float LockedVolume { get; set; } = 0.70f;
 
-        public bool StartWithWindows { get; set; }
+        public bool StartWithWindows { get; set; } = true;
 
         public bool NoiseCancellationEnabled { get; set; }
 
