@@ -36,6 +36,12 @@ namespace MicVolumeGuard.App
             };
             _guardService.Start();
 
+            // Enforce target level immediately on startup so first-run default is 70%.
+            if (_guardService.IsLockEnabled)
+            {
+                _micVolumeService.SetVolume(_guardService.LockedVolume);
+            }
+
             _overlayWindow = new OverlayWindow();
             _overlayWindow.Left = _settings.OverlayLeft;
             _overlayWindow.Top = _settings.OverlayTop;
