@@ -39,15 +39,70 @@ namespace MicVolumeGuard.App.Utils
             key.SetValue("NoModify", 1, RegistryValueKind.DWord);
             key.SetValue("NoRepair", 1, RegistryValueKind.DWord);
 
-            var uninstallCommand = File.Exists(uninstallScript)
-                ? QuotePath(uninstallScript)
-                : QuotePath(executablePath);
+            // Create uninstall batch script
+            CreateUninstallScript(uninstallScript, executablePath, installDirectory);
+
+            var uninstallCommand = QuotePath(uninstallScript);
             key.SetValue("UninstallString", uninstallCommand);
         }
 
         private static string QuotePath(string path)
         {
             return $"\"{path}\"";
+        }
+
+        private static void CreateUninstallScript(string scriptPath, string exePath, string installDir)
+        {
+            try
+            {
+                // Create PowerShell uninstall script (more reliable)
+                var psScriptPath = Path.Combine(installDir, "uninstall-micvolumeguard.ps1");
+                var psScriptContent = $@"# MicVolumeGuard Uninstaller
+Write-Host ""Uninstalling MicVolumeGuard..."" -ForegroundColor Cyan
+Write-Host """"
+
+# Stop any running instances
+Write-Host ""Stopping MicVolumeGuard..."" -ForegroundColor Yellow
+Get-Process -Name ""MicVolumeGuard.App"" -ErrorAction SilentlyContinue | Stop-Process -Force
+Start-Sleep -Seconds 2
+
+# Remove startup registry entry
+Write-Host ""Removing startup entry..."" -ForegroundColor Yellow
+Remove-ItemProperty -Path ""HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"" -Name ""MicVolumeGuard"" -ErrorAction SilentlyContinue
+
+# Remove uninstall registry entry
+Write-Host ""Removing uninstall entry..."" -ForegroundColor Yellow
+Remove-Item -Path ""HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\MicVolumeGuard"" -Recurse -Force -ErrorAction SilentlyContinue
+
+# Delete settings directory
+Write-Host ""Removing settings..."" -ForegroundColor Yellow
+$settingsPath = ""$env:LOCALAPPDATA\MicVolumeGuard""
+if (Test-Path $settingsPath) {{
+    Remove-Item -Path $settingsPath -Recurse -Force -ErrorAction SilentlyContinue
+}}
+
+Write-Host """" -ForegroundColor Green
+Write-Host ""MicVolumeGuard has been uninstalled successfully!"" -ForegroundColor Green
+Write-Host """" -ForegroundColor Green
+Write-Host ""The application folder can be deleted manually if needed:"" -ForegroundColor Cyan
+Write-Host ""{installDir}"" -ForegroundColor White
+Write-Host """"
+
+# Keep window open
+Read-Host ""Press Enter to close""
+";
+                File.WriteAllText(psScriptPath, psScriptContent);
+
+                // Create batch wrapper that calls PowerShell script
+                var batchContent = $@"@echo off
+powershell.exe -ExecutionPolicy Bypass -NoProfile -File ""%~dp0uninstall-micvolumeguard.ps1""
+";
+                File.WriteAllText(scriptPath, batchContent);
+            }
+            catch
+            {
+                // Silently fail if we can't create the script
+            }
         }
     }
 }
