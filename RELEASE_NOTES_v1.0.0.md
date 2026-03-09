@@ -19,7 +19,7 @@ Mic Volume Guard helps Windows users stop random microphone auto-gain and sudden
 
 ## Download
 - `MicVolumeGuard-Windows-win-x64.zip`
-- Extract and run `MicVolumeGuard.exe`
+- Extract and run `START-MicVolumeGuard.cmd` (or `MicVolumeGuard.exe`)
 
 ## Known limitation
 The app enforces Windows microphone endpoint volume. Some apps can still apply their own internal DSP/AGC inside their audio pipelines.
