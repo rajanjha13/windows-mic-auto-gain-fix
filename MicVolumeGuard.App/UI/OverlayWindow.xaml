@@ -1,0 +1,69 @@
+<Window x:Class="MicVolumeGuard.App.UI.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="124"
+        Height="52"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Left="20"
+        Top="20"
+        MouseLeftButtonDown="OverlayRoot_MouseLeftButtonDown">
+    <Border Background="#CC101820"
+            BorderBrush="#33FFFFFF"
+            BorderThickness="1"
+            CornerRadius="10"
+            Padding="6">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="28" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="22" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Width="22"
+                    Height="22"
+                    CornerRadius="11"
+                    Background="#22FFFFFF"
+                    VerticalAlignment="Center">
+                <TextBlock
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Text="MIC" />
+            </Border>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="2,0,0,0">
+                <TextBlock x:Name="VolumeText"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="White"
+                           Text="70%" />
+                <TextBlock x:Name="LockText"
+                           FontSize="9"
+                           Foreground="#99FFFFFF"
+                           Text="LOCKED" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <Button x:Name="IncreaseButton"
+                        Height="16"
+                        FontSize="10"
+                        Margin="0,0,0,2"
+                        Content="+"
+                        Click="IncreaseButton_Click" />
+                <Button x:Name="DecreaseButton"
+                        Height="16"
+                        FontSize="10"
+                        Content="-"
+                        Click="DecreaseButton_Click" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

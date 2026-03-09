@@ -1,0 +1,64 @@
+﻿<Window x:Class="MicVolumeGuard.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Mic Volume Guard"
+        Height="250"
+        Width="420"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   FontSize="20"
+                   FontWeight="SemiBold"
+                   Text="Mic Volume Guard" />
+
+        <CheckBox x:Name="LockToggle"
+                  Grid.Row="1"
+                  Margin="0,12,0,0"
+                  Content="Lock microphone system volume"
+                  Checked="LockToggle_OnChanged"
+                  Unchecked="LockToggle_OnChanged" />
+
+        <CheckBox x:Name="StartupToggle"
+              Grid.Row="1"
+              Margin="0,38,0,0"
+              Content="Start with Windows"
+              Checked="StartupToggle_OnChanged"
+              Unchecked="StartupToggle_OnChanged" />
+
+        <StackPanel Grid.Row="2" Margin="0,20,0,0">
+            <TextBlock x:Name="VolumeLabel" Text="Target Volume: 70%" />
+            <Slider x:Name="VolumeSlider"
+                    Margin="0,6,0,0"
+                    Minimum="0"
+                    Maximum="100"
+                    TickFrequency="5"
+                    IsSnapToTickEnabled="False"
+                    ValueChanged="VolumeSlider_OnValueChanged" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="3"
+                   Margin="0,12,0,0"
+                   TextWrapping="Wrap"
+                   Foreground="#555"
+                   Text="This app monitors the default mic volume and restores it when apps try to change it. Close button minimizes to tray." />
+
+        <Button Grid.Row="4"
+                Width="140"
+                Height="32"
+                HorizontalAlignment="Right"
+                Content="Hide to Tray"
+                Click="HideToTray_Click" />
+    </Grid>
+</Window>
