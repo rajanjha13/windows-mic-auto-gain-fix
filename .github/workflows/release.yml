@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Publish app
+        run: dotnet publish .\MicVolumeGuard.App\MicVolumeGuard.App.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishTrimmed=false
+
+      - name: Create zip
+        shell: pwsh
+        run: |
+          $publishDir = ".\MicVolumeGuard.App\bin\Release\net6.0-windows\win-x64\publish"
+          $zipPath = ".\MicVolumeGuard-Windows-win-x64.zip"
+          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+          Compress-Archive -Path "$publishDir\*" -DestinationPath $zipPath
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: MicVolumeGuard-Windows-win-x64.zip
+          generate_release_notes: true
