@@ -10,6 +10,8 @@ namespace MicVolumeGuard.App.Models
 
         public bool StartWithWindows { get; set; }
 
+        public bool NoiseCancellationEnabled { get; set; }
+
         public double OverlayLeft { get; set; } = 20;
 
         public double OverlayTop { get; set; } = 20;

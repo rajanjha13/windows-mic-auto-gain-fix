@@ -8,20 +8,26 @@ namespace MicVolumeGuard.App.UI
     public partial class OverlayWindow : Window
     {
         public event Action<float>? VolumeStepRequested;
+        public event Action? ToggleMuteRequested;
 
         public OverlayWindow()
         {
             InitializeComponent();
         }
 
-        public void UpdateVolume(float value, bool isLocked)
+        public void UpdateVolume(float value, bool isLocked, bool isMuted, bool noiseCancellationEnabled)
         {
             var percent = value * 100;
             VolumeText.Text = $"{percent:0}%";
-            LockText.Text = isLocked ? "LOCKED" : "UNLOCKED";
-            LockText.Foreground = isLocked
+            StatusText.Text = $"{(isLocked ? "LOCKED" : "UNLOCKED")} | {(noiseCancellationEnabled ? "NC ON" : "NC OFF")}";
+            StatusText.Foreground = isLocked
                 ? new SolidColorBrush(Color.FromRgb(132, 220, 103))
                 : new SolidColorBrush(Color.FromRgb(242, 196, 92));
+
+            MicGlyph.Fill = isMuted
+                ? new SolidColorBrush(Color.FromRgb(255, 95, 95))
+                : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            MuteButton.Content = isMuted ? "U" : "M";
         }
 
         private void IncreaseButton_Click(object sender, RoutedEventArgs e)
@@ -34,9 +40,14 @@ namespace MicVolumeGuard.App.UI
             VolumeStepRequested?.Invoke(-0.05f);
         }
 
+        private void MuteButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMuteRequested?.Invoke();
+        }
+
         private void OverlayRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (IncreaseButton.IsMouseOver || DecreaseButton.IsMouseOver)
+            if (IncreaseButton.IsMouseOver || DecreaseButton.IsMouseOver || MuteButton.IsMouseOver)
             {
                 return;
             }

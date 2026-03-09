@@ -9,6 +9,7 @@ namespace MicVolumeGuard.App.Services
         private MMDevice? _device;
 
         public event Action<float>? VolumeChanged;
+        public event Action<bool>? MuteChanged;
 
         public MicVolumeService()
         {
@@ -39,6 +40,28 @@ namespace MicVolumeGuard.App.Services
             _device.AudioEndpointVolume.MasterVolumeLevelScalar = clamped;
         }
 
+        public bool? GetMute()
+        {
+            try
+            {
+                return _device?.AudioEndpointVolume.Mute;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public void SetMute(bool value)
+        {
+            if (_device == null)
+            {
+                return;
+            }
+
+            _device.AudioEndpointVolume.Mute = value;
+        }
+
         public void RefreshDefaultDevice()
         {
             Unsubscribe();
@@ -57,6 +80,7 @@ namespace MicVolumeGuard.App.Services
         private void OnVolumeNotification(AudioVolumeNotificationData data)
         {
             VolumeChanged?.Invoke(data.MasterVolume);
+            MuteChanged?.Invoke(data.Muted);
         }
 
         private void Unsubscribe()

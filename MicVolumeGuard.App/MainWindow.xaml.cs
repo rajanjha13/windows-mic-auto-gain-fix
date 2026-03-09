@@ -11,8 +11,11 @@ namespace MicVolumeGuard.App
         private readonly MicVolumeService _micVolumeService;
         private readonly OverlayWindow _overlayWindow;
         private bool _initializing;
+        private bool _noiseCancellationEnabled;
+        private bool _isMuted;
 
         public bool AllowClose { get; set; }
+        public bool NoiseCancellationEnabled => _noiseCancellationEnabled;
 
         public MainWindow(MicVolumeGuardService guardService, MicVolumeService micVolumeService, OverlayWindow overlayWindow)
         {
@@ -25,18 +28,24 @@ namespace MicVolumeGuard.App
             _initializing = true;
             LockToggle.IsChecked = _guardService.IsLockEnabled;
             StartupToggle.IsChecked = WindowsStartupHelper.IsStartupEnabled();
+            _isMuted = _micVolumeService.GetMute() == true;
+            MuteToggleButton.Content = _isMuted ? "Unmute" : "Mute";
             VolumeSlider.Value = _guardService.LockedVolume * 100;
             VolumeLabel.Text = $"Target Volume: {VolumeSlider.Value:0}%";
             _initializing = false;
         }
 
-        public void SyncFromState(bool isLockEnabled, float lockedVolume, bool startWithWindows)
+        public void SyncFromState(bool isLockEnabled, float lockedVolume, bool startWithWindows, bool isMuted, bool noiseCancellationEnabled)
         {
             _initializing = true;
             LockToggle.IsChecked = isLockEnabled;
             StartupToggle.IsChecked = startWithWindows;
+            NoiseCancellationToggle.IsChecked = noiseCancellationEnabled;
             VolumeSlider.Value = lockedVolume * 100;
             VolumeLabel.Text = $"Target Volume: {VolumeSlider.Value:0}%";
+            _noiseCancellationEnabled = noiseCancellationEnabled;
+            _isMuted = isMuted;
+            MuteToggleButton.Content = _isMuted ? "Unmute" : "Mute";
             _initializing = false;
         }
 
@@ -60,7 +69,7 @@ namespace MicVolumeGuard.App
             }
 
             _guardService.IsLockEnabled = LockToggle.IsChecked == true;
-            _overlayWindow.UpdateVolume(_micVolumeService.GetVolume() ?? _guardService.LockedVolume, _guardService.IsLockEnabled);
+            _overlayWindow.UpdateVolume(_micVolumeService.GetVolume() ?? _guardService.LockedVolume, _guardService.IsLockEnabled, _isMuted, _noiseCancellationEnabled);
         }
 
         private void VolumeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -77,7 +86,7 @@ namespace MicVolumeGuard.App
             if (_guardService.IsLockEnabled)
             {
                 _micVolumeService.SetVolume(normalized);
-                _overlayWindow.UpdateVolume(normalized, true);
+                _overlayWindow.UpdateVolume(normalized, true, _isMuted, _noiseCancellationEnabled);
             }
         }
 
@@ -94,6 +103,31 @@ namespace MicVolumeGuard.App
             }
 
             WindowsStartupHelper.EnsureStartupRegistration(StartupToggle.IsChecked == true);
+        }
+
+        private void NoiseCancellationToggle_OnChanged(object sender, RoutedEventArgs e)
+        {
+            if (_initializing)
+            {
+                return;
+            }
+
+            _noiseCancellationEnabled = NoiseCancellationToggle.IsChecked == true;
+            _overlayWindow.UpdateVolume(_micVolumeService.GetVolume() ?? _guardService.LockedVolume, _guardService.IsLockEnabled, _isMuted, _noiseCancellationEnabled);
+        }
+
+        private void MuteToggleButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _isMuted = !_isMuted;
+            _micVolumeService.SetMute(_isMuted);
+            MuteToggleButton.Content = _isMuted ? "Unmute" : "Mute";
+            _overlayWindow.UpdateVolume(_micVolumeService.GetVolume() ?? _guardService.LockedVolume, _guardService.IsLockEnabled, _isMuted, _noiseCancellationEnabled);
+        }
+
+        public void SetMutedState(bool isMuted)
+        {
+            _isMuted = isMuted;
+            MuteToggleButton.Content = _isMuted ? "Unmute" : "Mute";
         }
     }
 }

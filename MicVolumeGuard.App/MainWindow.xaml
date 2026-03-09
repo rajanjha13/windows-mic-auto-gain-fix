@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Mic Volume Guard"
-        Height="250"
+        Height="330"
         Width="420"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
@@ -37,7 +37,14 @@
               Checked="StartupToggle_OnChanged"
               Unchecked="StartupToggle_OnChanged" />
 
-        <StackPanel Grid.Row="2" Margin="0,20,0,0">
+          <CheckBox x:Name="NoiseCancellationToggle"
+              Grid.Row="1"
+              Margin="0,64,0,0"
+              Content="Noise cancellation (app-level supported scenarios)"
+              Checked="NoiseCancellationToggle_OnChanged"
+              Unchecked="NoiseCancellationToggle_OnChanged" />
+
+          <StackPanel Grid.Row="2" Margin="0,24,0,0">
             <TextBlock x:Name="VolumeLabel" Text="Target Volume: 70%" />
             <Slider x:Name="VolumeSlider"
                     Margin="0,6,0,0"
@@ -46,13 +53,20 @@
                     TickFrequency="5"
                     IsSnapToTickEnabled="False"
                     ValueChanged="VolumeSlider_OnValueChanged" />
+            <Button x:Name="MuteToggleButton"
+                  Margin="0,10,0,0"
+                  Height="28"
+                  Width="130"
+                  HorizontalAlignment="Left"
+                  Content="Mute"
+                  Click="MuteToggleButton_OnClick" />
         </StackPanel>
 
         <TextBlock Grid.Row="3"
                    Margin="0,12,0,0"
                    TextWrapping="Wrap"
                    Foreground="#555"
-                   Text="This app monitors the default mic volume and restores it when apps try to change it. Close button minimizes to tray." />
+                 Text="This app monitors the default mic volume and restores it when apps try to change it. Noise cancellation behavior depends on Windows/app support. Close button minimizes to tray." />
 
         <Button Grid.Row="4"
                 Width="140"

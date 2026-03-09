@@ -16,12 +16,15 @@ namespace MicVolumeGuard.App
         private NotifyIconService? _trayService;
         private readonly SettingsService _settingsService = new();
         private AppSettings _settings = AppSettings.Default();
+        private bool _noiseCancellationEnabled;
+        private bool _isMuted;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             _settings = _settingsService.Load();
+            _noiseCancellationEnabled = _settings.NoiseCancellationEnabled;
             WindowsStartupHelper.EnsureStartupRegistration(_settings.StartWithWindows);
 
             _micVolumeService = new MicVolumeService();
@@ -36,10 +39,12 @@ namespace MicVolumeGuard.App
             _overlayWindow.Left = _settings.OverlayLeft;
             _overlayWindow.Top = _settings.OverlayTop;
             _overlayWindow.VolumeStepRequested += OnOverlayVolumeStepRequested;
+            _overlayWindow.ToggleMuteRequested += ToggleMute;
             _overlayWindow.Show();
 
             _mainWindow = new MainWindow(_guardService, _micVolumeService, _overlayWindow);
-            _mainWindow.SyncFromState(_guardService.IsLockEnabled, _guardService.LockedVolume, _settings.StartWithWindows);
+            _isMuted = _micVolumeService.GetMute() == true;
+            _mainWindow.SyncFromState(_guardService.IsLockEnabled, _guardService.LockedVolume, _settings.StartWithWindows, _isMuted, _noiseCancellationEnabled);
             _mainWindow.Hide();
 
             _trayService = new NotifyIconService();
@@ -49,8 +54,9 @@ namespace MicVolumeGuard.App
             _trayService.Show();
 
             _micVolumeService.VolumeChanged += UpdateOverlay;
+            _micVolumeService.MuteChanged += UpdateMuteState;
             var currentVolume = _micVolumeService.GetVolume() ?? _settings.LockedVolume;
-            _overlayWindow.UpdateVolume(currentVolume, _guardService.IsLockEnabled);
+            _overlayWindow.UpdateVolume(currentVolume, _guardService.IsLockEnabled, _isMuted, _noiseCancellationEnabled);
             _trayService.SetLockState(_guardService.IsLockEnabled);
         }
 
@@ -68,7 +74,8 @@ namespace MicVolumeGuard.App
                 LockedVolume = _guardService?.LockedVolume ?? _settings.LockedVolume,
                 StartWithWindows = WindowsStartupHelper.IsStartupEnabled(),
                 OverlayLeft = _overlayWindow?.Left ?? _settings.OverlayLeft,
-                OverlayTop = _overlayWindow?.Top ?? _settings.OverlayTop
+                OverlayTop = _overlayWindow?.Top ?? _settings.OverlayTop,
+                NoiseCancellationEnabled = _mainWindow?.NoiseCancellationEnabled ?? _noiseCancellationEnabled
             };
             _settingsService.Save(_settings);
 
@@ -100,8 +107,8 @@ namespace MicVolumeGuard.App
 
             _guardService.IsLockEnabled = !_guardService.IsLockEnabled;
             _trayService.SetLockState(_guardService.IsLockEnabled);
-            _overlayWindow.UpdateVolume(_micVolumeService?.GetVolume() ?? _guardService.LockedVolume, _guardService.IsLockEnabled);
-            _mainWindow?.SyncFromState(_guardService.IsLockEnabled, _guardService.LockedVolume, WindowsStartupHelper.IsStartupEnabled());
+            _overlayWindow.UpdateVolume(_micVolumeService?.GetVolume() ?? _guardService.LockedVolume, _guardService.IsLockEnabled, _isMuted, _mainWindow?.NoiseCancellationEnabled ?? _noiseCancellationEnabled);
+            _mainWindow?.SyncFromState(_guardService.IsLockEnabled, _guardService.LockedVolume, WindowsStartupHelper.IsStartupEnabled(), _isMuted, _mainWindow?.NoiseCancellationEnabled ?? _noiseCancellationEnabled);
         }
 
         private void UpdateOverlay(float value)
@@ -113,7 +120,7 @@ namespace MicVolumeGuard.App
 
             Dispatcher.Invoke(() =>
             {
-                _overlayWindow.UpdateVolume(value, _guardService.IsLockEnabled);
+                _overlayWindow.UpdateVolume(value, _guardService.IsLockEnabled, _isMuted, _mainWindow?.NoiseCancellationEnabled ?? _noiseCancellationEnabled);
             });
         }
 
@@ -128,8 +135,37 @@ namespace MicVolumeGuard.App
             var nextValue = Math.Clamp(baseValue + delta, 0f, 1f);
             _micVolumeService.SetVolume(nextValue);
             _guardService.LockedVolume = nextValue;
-            _overlayWindow.UpdateVolume(nextValue, _guardService.IsLockEnabled);
-            _mainWindow?.SyncFromState(_guardService.IsLockEnabled, _guardService.LockedVolume, WindowsStartupHelper.IsStartupEnabled());
+            _overlayWindow.UpdateVolume(nextValue, _guardService.IsLockEnabled, _isMuted, _mainWindow?.NoiseCancellationEnabled ?? _noiseCancellationEnabled);
+            _mainWindow?.SyncFromState(_guardService.IsLockEnabled, _guardService.LockedVolume, WindowsStartupHelper.IsStartupEnabled(), _isMuted, _mainWindow?.NoiseCancellationEnabled ?? _noiseCancellationEnabled);
+        }
+
+        private void ToggleMute()
+        {
+            if (_micVolumeService == null || _overlayWindow == null || _guardService == null)
+            {
+                return;
+            }
+
+            _isMuted = !(_micVolumeService.GetMute() == true);
+            _micVolumeService.SetMute(_isMuted);
+            _mainWindow?.SetMutedState(_isMuted);
+            _overlayWindow.UpdateVolume(_micVolumeService.GetVolume() ?? _guardService.LockedVolume, _guardService.IsLockEnabled, _isMuted, _mainWindow?.NoiseCancellationEnabled ?? _noiseCancellationEnabled);
+        }
+
+        private void UpdateMuteState(bool isMuted)
+        {
+            _isMuted = isMuted;
+
+            if (_overlayWindow == null || _guardService == null)
+            {
+                return;
+            }
+
+            Dispatcher.Invoke(() =>
+            {
+                _mainWindow?.SetMutedState(_isMuted);
+                _overlayWindow.UpdateVolume(_micVolumeService?.GetVolume() ?? _guardService.LockedVolume, _guardService.IsLockEnabled, _isMuted, _mainWindow?.NoiseCancellationEnabled ?? _noiseCancellationEnabled);
+            });
         }
     }
 }
