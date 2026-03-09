@@ -24,11 +24,17 @@ This app monitors your mic volume and restores it to your selected level automat
 
 ## Direct Download
 
-Download and extract:
+Download from the repository Releases page for the latest stable package:
 - `MicVolumeGuard-Windows-win-x64.zip`
 
 Run:
 - `MicVolumeGuard.App.exe`
+
+## Release Notes
+
+- Current version: `v1.0.0`
+- Changelog: `CHANGELOG.md`
+- Detailed notes: `RELEASE_NOTES_v1.0.0.md`
 
 ## Build from source
 
