@@ -7,8 +7,9 @@ namespace MicVolumeGuard.App.UI
 {
     public partial class OverlayWindow : Window
     {
-        public event Action<float>? VolumeStepRequested;
-        public event Action? ToggleMuteRequested;
+        private bool _suppressSliderEvents;
+
+        public event Action<float>? VolumeSetRequested;
 
         public OverlayWindow()
         {
@@ -19,6 +20,9 @@ namespace MicVolumeGuard.App.UI
         {
             var percent = value * 100;
             VolumeText.Text = $"{percent:0}%";
+            _suppressSliderEvents = true;
+            VolumeSlider.Value = percent;
+            _suppressSliderEvents = false;
             StatusText.Text = $"{(isLocked ? "LOCKED" : "UNLOCKED")} | {(noiseCancellationEnabled ? "NC ON" : "NC OFF")}";
             StatusText.Foreground = isLocked
                 ? new SolidColorBrush(Color.FromRgb(132, 220, 103))
@@ -27,27 +31,11 @@ namespace MicVolumeGuard.App.UI
             MicGlyph.Fill = isMuted
                 ? new SolidColorBrush(Color.FromRgb(255, 95, 95))
                 : new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            MuteButton.Content = isMuted ? "U" : "M";
-        }
-
-        private void IncreaseButton_Click(object sender, RoutedEventArgs e)
-        {
-            VolumeStepRequested?.Invoke(0.05f);
-        }
-
-        private void DecreaseButton_Click(object sender, RoutedEventArgs e)
-        {
-            VolumeStepRequested?.Invoke(-0.05f);
-        }
-
-        private void MuteButton_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleMuteRequested?.Invoke();
         }
 
         private void OverlayRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (IncreaseButton.IsMouseOver || DecreaseButton.IsMouseOver || MuteButton.IsMouseOver)
+            if (VolumeSlider.IsMouseOver)
             {
                 return;
             }
@@ -56,6 +44,16 @@ namespace MicVolumeGuard.App.UI
             {
                 DragMove();
             }
+        }
+
+        private void VolumeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_suppressSliderEvents)
+            {
+                return;
+            }
+
+            VolumeSetRequested?.Invoke((float)(VolumeSlider.Value / 100.0));
         }
     }
 }

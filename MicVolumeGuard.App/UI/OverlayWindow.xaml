@@ -1,8 +1,8 @@
 <Window x:Class="MicVolumeGuard.App.UI.OverlayWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Width="152"
-        Height="64"
+        Width="138"
+        Height="54"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -18,10 +18,13 @@
             CornerRadius="10"
             Padding="6">
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="28" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="26" />
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0"
@@ -51,25 +54,13 @@
                            Text="LOCKED | NC OFF" />
             </StackPanel>
 
-            <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                <Button x:Name="IncreaseButton"
-                        Height="16"
-                        FontSize="10"
-                        Margin="0,0,0,2"
-                        Content="+"
-                        Click="IncreaseButton_Click" />
-                <Button x:Name="DecreaseButton"
-                        Height="16"
-                        FontSize="10"
-                    Margin="0,0,0,2"
-                        Content="-"
-                        Click="DecreaseButton_Click" />
-                <Button x:Name="MuteButton"
-                    Height="16"
-                    FontSize="9"
-                    Content="M"
-                    Click="MuteButton_Click" />
-            </StackPanel>
+                    <Slider x:Name="VolumeSlider"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="2,4,2,0"
+                        Minimum="0"
+                        Maximum="100"
+                        ValueChanged="VolumeSlider_OnValueChanged" />
         </Grid>
     </Border>
 </Window>

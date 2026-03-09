@@ -24,8 +24,7 @@ Many Windows users see sudden microphone boosts or drops mid-call. This app cont
 - Detect and revert unwanted mic volume changes quickly.
 - Always-on-top compact overlay with live mic level.
 - Mic icon overlay for clearer, more reliable visual status.
-- Clickable `+` and `-` overlay buttons to adjust mic volume.
-- One-click mute/unmute from overlay and settings.
+- Compact overlay slider to adjust mic volume quickly.
 - Draggable overlay with persistent saved position.
 - Tray controls for settings, lock toggle, and exit.
 - Noise cancellation toggle for supported app-level scenarios.
