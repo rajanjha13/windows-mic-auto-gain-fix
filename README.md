@@ -49,7 +49,9 @@ Many Windows users see sudden microphone boosts or drops mid-call. This app cont
 
 ## Uninstall
 
-- If using ZIP package: exit app from tray, disable startup in app settings, then delete the extracted folder.
+- ZIP install now registers in Windows after first launch.
+- Uninstall from `Settings > Apps > Installed apps` by searching `Mic Volume Guard`.
+- If a leftover folder remains, delete the extracted app folder manually.
 
 ## Usage Terms
 

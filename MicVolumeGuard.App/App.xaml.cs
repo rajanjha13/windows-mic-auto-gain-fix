@@ -26,6 +26,7 @@ namespace MicVolumeGuard.App
             _settings = _settingsService.Load();
             _noiseCancellationEnabled = _settings.NoiseCancellationEnabled;
             WindowsStartupHelper.EnsureStartupRegistration(_settings.StartWithWindows);
+            PortableUninstallHelper.EnsureRegistration();
 
             _micVolumeService = new MicVolumeService();
             _guardService = new MicVolumeGuardService(_micVolumeService)
